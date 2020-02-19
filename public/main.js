@@ -162,6 +162,6 @@ function iceCallback(e) {
 }
 
 function handleTrackEvent(e) {
-  console.log('**************TRACKS streaming ', e.streams[0])
+  console.log('**************TRACKS streaming ', e.streams)
   document.querySelector("#remoteVideo").srcObject = e.streams[0];
 }
