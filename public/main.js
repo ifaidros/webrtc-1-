@@ -23,11 +23,8 @@ function handIncoming(message) {
 socket.on('offer', handOffer)
 //************************************************* */
 function handOffer(message) {
-  console.log('****Received from server', message.sdp) 
-
-  let localStream = ''
-
-  let config = {
+  //console.log('****Received from server', message.sdp) 
+    let config = {
     iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
   }
 
@@ -36,7 +33,10 @@ function handOffer(message) {
     video: true 
   };
 
-  createPeerConnection();
+  if (!myPeerConnection) {
+    createPeerConnection();
+    console.log('@@@@@@@@@@@@@@@@ DID NOT EXIST AND CREATED')
+  }
 
   let desc = new RTCSessionDescription(message);
 
@@ -67,6 +67,14 @@ socket.on('answer', handAnswer)
 
 function handAnswer(message) {
   console.log('****Received answer', message) 
+
+  let desc = new RTCSessionDescription(message);
+
+  myPeerConnection.setRemoteDescription(desc).then(() => {
+    console.log('@@@@@@@@@@@@@@@@ setRemoteDescription from onAnswer')
+  })
+  .catch(handleGetUserMediaError);
+
 }
 
 
@@ -112,7 +120,7 @@ function createPeerConnection() {
 
   myPeerConnection.onicecandidate = iceCallback;
   myPeerConnection.ontrack = handleTrackEvent;
-  // myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
+  //myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
   // myPeerConnection.onremovetrack = handleRemoveTrackEvent;
   // myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
   // myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
@@ -133,28 +141,28 @@ function callButtonAction() {
 }
 
 
-const ICEButton = document.getElementById('getICEButton');
-ICEButton.addEventListener('click', ICEButtonAction);
+// const ICEButton = document.getElementById('getICEButton');
+// ICEButton.addEventListener('click', ICEButtonAction);
 
-function ICEButtonAction () {
-  let config = {
-    iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
-  }
-  let pc = new RTCPeerConnection(config);
-  console.log('****RTCPeerConnection: ', pc)
-  const offerOptions = {offerToReceiveAudio: 1};
-  pc.createOffer(
-    offerOptions
-  ).then((offer) => {
-  console.log('****Offer ', offer)
-  return pc.setLocalDescription(offer)
-  }
+// function ICEButtonAction () {
+//   let config = {
+//     iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
+//   }
+//   let pc = new RTCPeerConnection(config);
+//   console.log('****RTCPeerConnection: ', pc)
+//   const offerOptions = {offerToReceiveAudio: 1};
+//   pc.createOffer(
+//     offerOptions
+//   ).then((offer) => {
+//   console.log('****Offer ', offer)
+//   return pc.setLocalDescription(offer)
+//   }
     
-  )
-  pc.onicecandidate  = iceCallback;
-  //pc.onicegatheringstatechange = iceCallback;
+//   )
+//   pc.onicecandidate  = iceCallback;
+//   //pc.onicegatheringstatechange = iceCallback;
 
-}
+// }
 
 function iceCallback(e) {
   socket.emit('onicecandidate', e.candidate)
