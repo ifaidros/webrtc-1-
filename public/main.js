@@ -141,7 +141,7 @@ function callButtonAction() {
   .then(() => {
     console.log('sssssssss', myPeerConnection.localDescription)
     socket.emit('offer', myPeerConnection.localDescription)
-    document.querySelector('#hangupButton').disabled = false;
+    //document.querySelector('#hangupButton').disabled = false;
   })
 }
 
