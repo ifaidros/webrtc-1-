@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -14,18 +15,27 @@ body {
 }
 
 #videoBoxes {
-  width: 50%;
+  width: 60%;
   height: 500px;
   margin: 0 auto;
   border: solid;
+  overflow: hidden;
 }
 
 .videoBox {
-  max-width: 100%;
-  height: auto;
+  margin: 0 auto;
+  width: 200px;
+  height: 200px;
   border: dotted;
 }
 
+.videoFitBox {
+  object-fit: cover;
+  border: double;
+}
+
 #ctrlButtons {
+  width: 60%;
+  margin: 0 auto;
   clear: both;
 }
