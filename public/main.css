@@ -6,36 +6,42 @@
 
 body {
   font-family: sans-serif;
+  background-color: silver;
 }
 
 #container {
   width: 90%;
   margin: 0 auto;
   border: double;
+  background-color: snow;
+  text-align: center;
 }
 
 #videoBoxes {
-  width: 60%;
+  width: 80%;
   height: 500px;
   margin: 0 auto;
-  border: solid;
-  overflow: hidden;
+  border: 1px solid red;
+  /* overflow: hidden; */
 }
 
 .videoBox {
   margin: 0 auto;
-  width: 200px;
-  height: 200px;
-  border: dotted;
+  width: 80%;
+  border: 1px dotted blue;
 }
 
 .videoFitBox {
   object-fit: cover;
   border: double;
+  width: 200px;
+  height: 200px;
 }
 
 #ctrlButtons {
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
   clear: both;
+  border: 1px dotted;
+  padding: .8rem;
 }
