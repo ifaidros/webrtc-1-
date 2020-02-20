@@ -13,18 +13,21 @@
             <h1>WebRTC</h1>
 
             <div id="videoBoxes">
-                <video id="localVideo" class="videoBox" autoplay playsinline muted></video>
-                <video id="remoteVideo" class="videoBox"  autoplay playsinline muted></video>
+                <div class="videoBox">
+                    <video id="localVideo" autoplay playsinline muted></video>
+                </div>
+                <div class="videoBox">
+                    <video id="remoteVideo" autoplay playsinline muted></video>
+                </div>      
             </div>
 
-
-
-            <div>
+            <div id="ctrlButtons">
                 <button id="startButton">Start</button>
                 <button id="callButton">Call</button>
                 <button id="hangupButton">Hang Up</button>
                 <button id="getICEButton">Get ICE</button>
             </div>
+
 
             <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
             <script src="/socket.io/socket.io.js"></script>

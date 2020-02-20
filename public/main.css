@@ -15,23 +15,15 @@ body {
 
 #videoBoxes {
   width: 50%;
-  height: 320px;
+  height: 500px;
   margin: 0 auto;
   border: solid;
 }
 
 .videoBox {
   max-width: 100%;
-  width: 320px;
+  height: auto;
   border: dotted;
-}
-
-#localVideo {
-  float: left;
-}
-
-#remoteVideo {
-  float: right;
 }
 
 #ctrlButtons {
