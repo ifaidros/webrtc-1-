@@ -86,6 +86,10 @@ startButton.addEventListener('click', startButtonAction);
 const callButton = document.querySelector('#callButton');
 callButton.addEventListener('click', callButtonAction);
 
+const hangupButton = document.querySelector('#hangupButton');
+hangupButton.addEventListener('click', hangupButtonnAction);
+
+
 function startButtonAction() {
   
   createPeerConnection();
@@ -137,6 +141,7 @@ function callButtonAction() {
   .then(() => {
     console.log('sssssssss', myPeerConnection.localDescription)
     socket.emit('offer', myPeerConnection.localDescription)
+    document.querySelector('#hangupButton').disabled = false;
   })
 }
 
@@ -172,4 +177,26 @@ function iceCallback(e) {
 function handleTrackEvent(e) {
   console.log('**************TRACKS streaming ', e.streams)
   document.querySelector("#remoteVideo").srcObject = e.streams[0];
+}
+
+function hangupButtonnAction() {
+  console.log('close the connection')
+
+
+  myPeerConnection.getStats(null).then(stats => {
+    var statsOutput = "";
+ 
+    stats.forEach(report => {
+      if (report.type === "inbound-rtp" && report.kind === "video") {
+        Object.keys(report).forEach(statName => {
+          statsOutput += `<strong>${statName}:</strong> ${report[statName]}<br>\n`;
+        });
+      }
+    });
+    
+    document.querySelector("#statsP").innerHTML = statsOutput;
+    console.log(statsOutput)
+  });  
+
+
 }

@@ -22,13 +22,13 @@ body {
   height: 500px;
   margin: 0 auto;
   border: 1px solid red;
-  /* overflow: hidden; */
 }
 
 .videoBox {
   margin: 0 auto;
   width: 80%;
   border: 1px dotted blue;
+  text-align: center;
 }
 
 .videoFitBox {
@@ -41,7 +41,6 @@ body {
 #ctrlButtons {
   width: 80%;
   margin: 0 auto;
-  clear: both;
   border: 1px dotted;
   padding: .8rem;
 }
