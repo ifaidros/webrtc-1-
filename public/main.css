@@ -1,8 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: sans-serif;
 }
 
-video {
+#container {
+  width: 90%;
+  margin: 0 auto;
+  border: double;
+}
+
+#videoBoxes {
+  width: 50%;
+  height: 320px;
+  margin: 0 auto;
+  border: solid;
+}
+
+.videoBox {
   max-width: 100%;
   width: 320px;
+  border: dotted;
+}
+
+#localVideo {
+  float: left;
+}
+
+#remoteVideo {
+  float: right;
+}
+
+#ctrlButtons {
+  clear: both;
 }

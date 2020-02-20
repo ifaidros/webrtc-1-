@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>WebRTC</title>
-  <link rel="stylesheet" href="main.css" />
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WebRTC</title>
+        <link rel="stylesheet" href="main.css" />
+    </head>
 
-<body>
-  <h1>WebRTC</h1>
+    <body>
+        <div id="container">
+            <h1>WebRTC</h1>
 
-  <video id="localVideo" autoplay playsinline muted></video>
-  <video id="remoteVideo" autoplay playsinline muted></video>
+            <div id="videoBoxes">
+                <video id="localVideo" class="videoBox" autoplay playsinline muted></video>
+                <video id="remoteVideo" class="videoBox"  autoplay playsinline muted></video>
+            </div>
 
-  <div>
-    <button id="startButton">Start</button>
-    <button id="callButton">Call</button>
-    <button id="hangupButton">Hang Up</button>
-    <button id="getICEButton">Get ICE</button>
-  </div>
 
-  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="main.js"></script>
-</body>
+
+            <div>
+                <button id="startButton">Start</button>
+                <button id="callButton">Call</button>
+                <button id="hangupButton">Hang Up</button>
+                <button id="getICEButton">Get ICE</button>
+            </div>
+
+            <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
+            <script src="main.js"></script>
+            </div>
+
+    </body>
 </html>
