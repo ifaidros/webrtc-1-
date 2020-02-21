@@ -179,8 +179,43 @@ function handleTrackEvent(e) {
   document.querySelector("#remoteVideo").srcObject = e.streams[0];
 }
 
-function handleNegotiationNeededEvent(e) {
-  console.log('****handleNegotiationNeededEvent called: ', e)
+async function handleNegotiationNeededEvent(e) {
+  //console.log('****handleNegotiationNeededEvent called: ', e)
+
+  console.log("*** Negotiation needed");
+
+  try {
+    console.log("---> Creating offer");
+    const offer = await myPeerConnection.createOffer();
+
+    // If the connection hasn't yet achieved the "stable" state,
+    // return to the caller. Another negotiationneeded event
+    // will be fired when the state stabilizes.
+
+    if (myPeerConnection.signalingState != "stable") {
+      console.log("     -- The connection isn't stable yet; postponing...")
+      return;
+    }
+
+    // Establish the offer as the local peer's current
+    // description.
+
+    console.log("---> Setting local description to the offer");
+    await myPeerConnection.setLocalDescription(offer);
+
+    // Send the offer to the remote peer.
+
+    console.log("---> Sending the offer to the remote peer");
+    socket.emit('offer', myPeerConnection.localDescription)
+
+  } catch(err) {
+    console.log("*** The following error occurred while handling the negotiationneeded event:");
+    //reportError(err);
+  };
+
+
+
+
 
 }
 
