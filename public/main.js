@@ -124,11 +124,11 @@ function createPeerConnection() {
 
   myPeerConnection.onicecandidate = iceCallback;
   myPeerConnection.ontrack = handleTrackEvent;
-  //myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
-  // myPeerConnection.onremovetrack = handleRemoveTrackEvent;
-  // myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
-  // myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
-  // myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
+  myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
+  myPeerConnection.onremovetrack = handleRemoveTrackEvent;
+  myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
+  myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
+  myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
 }
 
 
@@ -177,6 +177,29 @@ function iceCallback(e) {
 function handleTrackEvent(e) {
   console.log('**************TRACKS streaming ', e.streams)
   document.querySelector("#remoteVideo").srcObject = e.streams[0];
+}
+
+function handleNegotiationNeededEvent(e) {
+  console.log('****handleNegotiationNeededEvent called: ', e)
+
+}
+
+function handleRemoveTrackEvent(e) {
+  console.log('****handleRemoveTrackEvent called: ', e)
+
+}
+
+function handleICEConnectionStateChangeEvent(e) {
+  console.log('****handleICEConnectionStateChangeEvent called: ', e)
+}
+
+function handleICEGatheringStateChangeEvent(e) {
+  console.log('****handleICEGatheringStateChangeEvent called: ', e)
+}
+
+function handleSignalingStateChangeEvent(e) {
+  console.log('****handleSignalingStateChangeEvent called: ', e)
+
 }
 
 function hangupButtonnAction() {
