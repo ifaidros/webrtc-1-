@@ -188,8 +188,11 @@ function callButtonAction() {
 // }
 
 function iceCallback(e) {
-  socket.emit('onicecandidate', e.candidate)
-  console.log('****Candidate: ', e.candidate)
+  if (e.candidate) {
+    socket.emit('onicecandidate', e.candidate)
+    console.log('****Candidate: ', e.candidate)
+  }
+
 }
 
 function handleTrackEvent(e) {
@@ -227,8 +230,8 @@ async function handleNegotiationNeededEvent(e) {
     socket.emit('offer', myPeerConnection.localDescription)
 
   } catch(err) {
-    console.log("*** The following error occurred while handling the negotiationneeded event:");
-    //reportError(err);
+    console.log("*** The following error occurred while handling the negotiationneeded event:", err);
+
   };
 
 
