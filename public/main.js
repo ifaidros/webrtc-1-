@@ -4,6 +4,7 @@ const socket = io()
 
 let localStream = '';
 let myPeerConnection = '';
+let config = ''
 
 socket.on('onicecandidate', handIncoming)
 
@@ -24,9 +25,9 @@ socket.on('offer', handOffer)
 //************************************************* */
 function handOffer(message) {
   //console.log('****Received from server', message.sdp) 
-    let config = {
-    iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
-  }
+  //   let config = {
+  //   iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
+  // }
 
   const mediaConstraints = {
     audio: true, 
@@ -77,6 +78,16 @@ function handAnswer(message) {
 
 }
 
+socket.on('config', handConfig)
+
+function handConfig(message) {
+  console.log('****Received config', message) 
+  
+  if (!config) {
+    config = message  
+  }
+}
+
 
 
 
@@ -89,9 +100,14 @@ callButton.addEventListener('click', callButtonAction);
 const hangupButton = document.querySelector('#hangupButton');
 hangupButton.addEventListener('click', hangupButtonnAction);
 
+const getTokenButton = document.querySelector('#getTokenButton');
+getTokenButton.addEventListener('click', getTokenButtonAction);
+
 
 function startButtonAction() {
-  
+
+  console.log('*******************', config)
+
   createPeerConnection();
 
   const mediaConstraints = {
@@ -114,9 +130,11 @@ function handleGetUserMediaError(e) {
 }
 
 function createPeerConnection() {
-  let config = {
-    iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
-  }
+
+
+  // let config = {
+  //   iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
+  // }
 
   myPeerConnection = new RTCPeerConnection(config);
 
@@ -255,6 +273,36 @@ function hangupButtonnAction() {
     document.querySelector("#statsP").innerHTML = statsOutput;
     console.log(statsOutput)
   });  
-
-
 }
+
+
+function getTokenButtonAction() {
+  document.querySelector('#getTokenButton').disabled = true;
+
+  function getToken() {
+    return fetch('/token').
+    then((response) => {
+        if (response.status === 200) {       
+          return response.json()
+        } else {
+            throw new Error('Unable to fetch token')
+        }
+    }).then((tokenObject) => {
+      //console.log('*****Access Token:*****', tokenObject)
+      config = {
+        iceServers: tokenObject.iceServers
+      }
+      //console.log('*******STUN SERVERS', tokenObject.iceServers)
+      console.log('*****Access Token:*****', config)
+      socket.emit('config', config)
+    })
+  
+  }
+  
+  getToken()
+}
+
+
+
+
+
