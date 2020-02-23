@@ -72,7 +72,7 @@ function handAnswer(message) {
   let desc = new RTCSessionDescription(message);
 
   myPeerConnection.setRemoteDescription(desc).then(() => {
-    console.log('@@@@@@@@@@@@@@@@ setRemoteDescription from onAnswer')
+    console.log('----> desc created as result from the socket onAnswer', desc)
   })
   .catch(handleGetUserMediaError);
 
