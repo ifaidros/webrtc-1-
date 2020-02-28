@@ -5,6 +5,7 @@ const socket = io()
 let localStream = '';
 let myPeerConnection = '';
 let config = ''
+let arrayICECandidates = []
 
 socket.on('onicecandidate', handIncoming)
 
@@ -60,6 +61,10 @@ function handOffer(message) {
 
     socket.emit('answer', myPeerConnection.localDescription) 
 
+    arrayICECandidates.forEach((candidate) => {
+      socket.emit('onicecandidate', candidate)
+    })
+
   })
   .catch(handleGetUserMediaError);
 }
@@ -73,6 +78,10 @@ function handAnswer(message) {
 
   myPeerConnection.setRemoteDescription(desc).then(() => {
     console.log('----> desc created as result from the socket onAnswer', desc)
+
+    arrayICECandidates.forEach((candidate) => {
+      socket.emit('onicecandidate', candidate)
+    })
   })
   .catch(handleGetUserMediaError);
 
@@ -189,12 +198,9 @@ function callButtonAction() {
 
 function iceCallback(e) {
   if (e.candidate) {
-    setInterval(() => {
-      socket.emit('onicecandidate', e.candidate)
-    console.log('****Candidate: ', e.candidate)
-    }, 4000)
+    arrayICECandidates.push(e.candidate)
     // socket.emit('onicecandidate', e.candidate)
-    // console.log('****Candidate: ', e.candidate)
+    console.log('****Candidate: ', e.candidate)
   }
 
 }
