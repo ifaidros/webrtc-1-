@@ -30,7 +30,8 @@ function handOffer(message) {
   // }
 
   const mediaConstraints = {
-    audio: true
+    audio: true, 
+    video: true 
   };
 
   if (!myPeerConnection) {
