@@ -189,8 +189,12 @@ function callButtonAction() {
 
 function iceCallback(e) {
   if (e.candidate) {
-    socket.emit('onicecandidate', e.candidate)
+    setInterval(() => {
+      socket.emit('onicecandidate', e.candidate)
     console.log('****Candidate: ', e.candidate)
+    }, 4000)
+    // socket.emit('onicecandidate', e.candidate)
+    // console.log('****Candidate: ', e.candidate)
   }
 
 }
