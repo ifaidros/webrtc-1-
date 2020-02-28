@@ -132,9 +132,9 @@ function handleGetUserMediaError(e) {
 function createPeerConnection() {
 
 
-  let config = {
-    iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
-  }
+  // let config = {
+  //   iceServers: [{urls: 'stun:stun.l.google.com:19302'}]
+  // }
 
   myPeerConnection = new RTCPeerConnection(config);
 
