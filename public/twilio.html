@@ -4,39 +4,39 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>WebRTC</title>
+        <title>Twilio Video</title>
         <link rel="stylesheet" href="main.css" />
     </head>
 
     <body>
         <div id="container">
-            <h1>WebRTC</h1>
+            <h1>Twilio Video</h1>
 
             <div id="videoBoxes">
                 <div class="videoBox">
                     <h3>Local Video</h3>
-                    <video id="localVideo" class="videoFitBox" autoplay playsinline ></video>
+                    <video id="localVideo" class="videoFitBox" autoplay playsinline></video>
                 </div>
                 <div class="videoBox">
                     <h3>Remote Video</h3>
-                    <video id="remoteVideo" class="videoFitBox" autoplay playsinline ></video>
+                    <video id="remoteVideo" class="videoFitBox" autoplay playsinline></video>
                 </div>   
                 <p id="statsP"></p>   
             </div>
 
             <div id="ctrlButtons">
                 <button id="getTokenButton">1-Get Config</button>
-                <button id="startButton" disabled>2-Start</button>
+                <button id="startButton">2-Start</button>
                 <!-- <button id="callButton" disabled>Call</button> -->
-                <button id="hangupButton" disabled>Hang Up</button>
-                <!-- <button id="getICEButton" disabled>Get ICE</button> -->
-                <button id="muteVideoButton">Mute</button>
+                <button id="hangupButton">Hang Up</button>
+                <button id="getICEButton" disabled>Get ICE</button>
+                <button id="unmuteVideo" disabled>Unmute</button>
+                <button id="muteVideo" disabled>Mute</button>
+
             </div>
 
-
-            <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-            <script src="/socket.io/socket.io.js"></script>
-            <script src="main.js"></script>
+            <script src="//media.twiliocdn.com/sdk/js/video/releases/2.2.0/twilio-video.min.js"></script>
+            <script src="main-twilio-video.js"></script>
             </div>
 
     </body>

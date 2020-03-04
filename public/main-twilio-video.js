@@ -1,13 +1,7 @@
-// If we only want to just use a public Google STUN server then 
-// uncomment the "config" variable inside the createPeerConnection
-// function and disable the button getTokenButton.
-
-const socket = io();
-
-let localStream = '';
-let peerConnection = '';
-let config = '';
-let mute = false;
+let token = ''
+let roomObject = ''
+const Video = Twilio.Video
+let roomName = 'test_room_1'
 
 //Define functions for the buttons
 
@@ -21,10 +15,7 @@ startButton.addEventListener('click', startButtonAction);
 // callButton.addEventListener('click', callButtonAction);
 
 const hangupButton = document.querySelector('#hangupButton');
-hangupButton.addEventListener('click', hangupButtonAction);
-
-const muteVideoButton = document.querySelector('#muteVideoButton');
-muteVideoButton.addEventListener('click', muteVideoButtonAction);
+hangupButton.addEventListener('click', hangupButtonnAction);
 
 
 function getTokenButtonAction() {
@@ -32,22 +23,43 @@ function getTokenButtonAction() {
   
   function getToken() {
 
-    return fetch('/token')
+    return fetch('/twilio/token')
     .then((response) => {
         if (response.status === 200) {       
           return response.json()
         } else {
-            throw new Error('Unable to fetch token');
+            throw new Error('Unable to fetch token')
         }
     }).then((tokenObject) => {
-      //console.log('*****Access Token:*****', tokenObject)
-      config = {
-        iceServers: tokenObject.iceServers
-      };
-      //console.log('*******STUN SERVERS', tokenObject.iceServers)
-      console.log('*****Access Token:*****', config);      
-      socket.emit('config', config);
-      startButton.disabled = false;
+      console.log('*****Access Token:*****', tokenObject.token)   
+      token = tokenObject.token 
+      startButton.disabled = false   
+      
+      
+      Video.createLocalTracks().then((localTracks) => {
+        var localMediaContainer = document.querySelector('#localVideo')
+        localTracks.forEach((track) => {
+          track.attach(localMediaContainer)
+          console.log('track', track)
+        })
+      })
+
+      // //////////NOT WORKING with video tags. Only with divs.
+      // Video.createLocalTracks().then((localTracks) => {
+      //   var localMediaContainer = document.querySelector('#localVideo')
+      //   localTracks.forEach((track) => {
+      //     localMediaContainer.appendChild(track.attach())
+      //     console.log('track', track)
+      //   });
+      // });  
+
+      // /////////Only video
+      // Video.createLocalVideoTrack().then(track => {
+      //   const localMediaContainer = document.querySelector('#localVideo')
+      //   track.attach(localMediaContainer)
+      //   console.log('track', track)
+      //   })
+
     })  
   }
   
@@ -55,25 +67,65 @@ function getTokenButtonAction() {
 }
 
 function startButtonAction() {
-  console.log('-->Start button clicked with config: ', config)
+  console.log('-->Start button clicked')
 
-  createPeerConnection();
+  Video.connect(token, { name: 'test_room_1' })
+  .then(joinedRoom)
+  .catch((err) => {
+    console.log('Error joining the room', err)
+  }) 
 
-  const mediaConstraints = {
-    audio: true, 
-    video: true 
-  };
 
-  navigator.mediaDevices.getUserMedia(mediaConstraints)
-  .then((localStream) => {
-    document.querySelector('#localVideo').srcObject = localStream;
-    console.log('-->localstream is ', localStream.getTracks());
-    localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-    console.log('-->peerConnection ', peerConnection);
-    startButton.disabled = true;
-    hangupButton.disabled = false;
-  })
-  .catch(handleGetUserMediaError);
+}
+
+function joinedRoom(room) {
+    roomObject = room
+    console.log('Room details: ', room);
+    console.log('Connected to Room: ', room.name);
+    console.log('Room participants: ', room.participants);
+    console.log('Local participant: ', room.localParticipant.identity);
+  
+    room.participants.forEach(participantConnected);
+    room.on('participantConnected', participantConnected);
+  
+    room.on('participantDisconnected', participantDisconnected);
+    room.once('disconnected', error => room.participants.forEach(participantDisconnected));
+
+    Video.createLocalVideoTrack().then(track => {
+      const localMediaContainer = document.querySelector('#localVideo')
+      localMediaContainer.appendChild(track.attach());
+      console.log('track', track)
+    });
+}
+
+function participantConnected() {
+  console.log('Participant connected', room.localParticipant.identity);
+}
+
+function participantDisconnected() {
+  console.log('Participant is disconnected', participant);
+}
+
+
+function hangupButtonnAction() {
+  console.log('-->close the connection')
+  roomObject.disconnect();
+
+
+  // peerConnection.getStats(null).then(stats => {
+  //   var statsOutput = "";
+ 
+  //   stats.forEach(report => {
+  //     if (report.type === "inbound-rtp" && report.kind === "video") {
+  //       Object.keys(report).forEach(statName => {
+  //         statsOutput += `<strong>${statName}:</strong> ${report[statName]}<br>\n`;
+  //       });
+  //     }
+  //   });
+    
+  //   document.querySelector("#statsP").innerHTML = statsOutput;
+  //   console.log(statsOutput)
+  // });  
 }
 
 function createPeerConnection() {
@@ -206,10 +258,10 @@ function handleSignalingStateChangeEvent(e) {
 
 //Define socket listeners and functions
 
-socket.on('onicecandidate', handleIncomingICE);
-socket.on('offer', handleOffer);
-socket.on('answer', handleAnswer);
-socket.on('config', handleConfig);
+// socket.on('onicecandidate', handleIncomingICE);
+// socket.on('offer', handleOffer);
+// socket.on('answer', handleAnswer);
+// socket.on('config', handleConfig);
 
 function handleIncomingICE(message) {
   let incomingICEcandidate = new RTCIceCandidate(message);
@@ -317,46 +369,7 @@ function closeVideoCall() {
 
 }
 
-function hangupButtonAction() {
-  console.log('-->close the connection')
-  closeVideoCall()
-}
 
-function muteVideoButtonAction() {  
-  
-  if (mute===false) {
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
-  
-    remoteVideo.srcObject.getTracks()[0].enabled = false
-    localVideo.srcObject.getTracks()[0].enabled = false
-  
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
-
-    document.querySelector('#muteVideoButton').textContent = 'Unmute'
-    console.log('button presswed')
-
-    mute = true
-
-  } else if (mute===true) {
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
-  
-    remoteVideo.srcObject.getTracks()[0].enabled = true
-    localVideo.srcObject.getTracks()[0].enabled = true
-  
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
-
-    document.querySelector('#muteVideoButton').textContent = 'Mute'
-
-    mute = false
-
-  }
-
-
-}
 
 
 // const ICEButton = document.getElementById('getICEButton');

@@ -12,6 +12,9 @@ const port = process.env.PORT || 3000
 
 const accountSid = process.env.ACCOUNT_SID
 const authToken = process.env.AUTH_TOKEN
+const videoSid = process.env.VIDEO_SID
+const videoSecret = process.env.VIDEO_SECRET
+
 
 app.use(helmet())
 app.use(express.json())
@@ -25,6 +28,45 @@ app.get('/token', (req, res) => {
     res.send(token)
   })
 })
+
+app.get('/twilio', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public') + '/twilio.html')
+})
+
+app.get('/twilio/token', (req, res) => {
+  const token = createToken()
+  console.log('the token is ' + token.token)
+  // res.set({'Access-Control-Allow-Origin': '*'})
+  res.setHeader('Content-Type', 'application/json')
+  res.send(token)
+})
+
+//"Token Server" 
+function createToken() {    
+  const AccessToken = require('twilio').jwt.AccessToken
+  const VideoGrant  = AccessToken.VideoGrant
+  const twilioAccountSid = process.env.ACCOUNT_SID
+  const twilioApiKey = process.env.VIDEO_SID
+  const twilioApiSecret = process.env.VIDEO_SECRET
+  // Create an Access Token
+  const token = new AccessToken(
+    twilioAccountSid,
+    twilioApiKey,
+    twilioApiSecret,
+    ttl=300
+  )
+  // Set the Identity of this token
+  token.identity = 'video-user-1'
+  // Grant access to Video
+  const grant = new VideoGrant()
+  grant.room = 'test_room_1'
+  token.addGrant(grant)
+
+  return {
+      identity: token.identity,
+      token: token.toJwt()
+  }
+}
 
 
 io.on('connection', (socket) => {
