@@ -71,7 +71,6 @@ function startButtonAction() {
     localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
     console.log('-->peerConnection ', peerConnection);
     startButton.disabled = true;
-    hangupButton.disabled = false;
   })
   .catch(handleGetUserMediaError);
 }
@@ -107,6 +106,7 @@ function handleTrackEvent(e) {
   console.log('-->ontrack trigerred for stream: ', e.streams)
   document.querySelector("#remoteVideo").srcObject = e.streams[0];
   hangupButton.disabled = false;
+  muteVideoButton.disabled = false;
 }
 
 function handleNegotiationNeededEvent(e) {
@@ -325,37 +325,33 @@ function hangupButtonAction() {
 function muteVideoButtonAction() {  
   
   if (mute===false) {
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
+    //console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0]);
+    //console.log('local tracks: ', localVideo.srcObject.getTracks()[0]);
   
-    remoteVideo.srcObject.getTracks()[0].enabled = false
-    localVideo.srcObject.getTracks()[0].enabled = false
+    remoteVideo.srcObject.getTracks()[0].enabled = false;
+    localVideo.srcObject.getTracks()[0].enabled = false;
   
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
+    // console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0]);
+    // console.log('local tracks: ', localVideo.srcObject.getTracks()[0]);
 
-    document.querySelector('#muteVideoButton').textContent = 'Unmute'
-    console.log('button presswed')
+    document.querySelector('#muteVideoButton').textContent = 'Unmute';
 
-    mute = true
+    mute = true;
 
-  } else if (mute===true) {
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
+  } else {
+    // console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0]);
+    // console.log('local tracks: ', localVideo.srcObject.getTracks()[0]);
   
-    remoteVideo.srcObject.getTracks()[0].enabled = true
-    localVideo.srcObject.getTracks()[0].enabled = true
+    remoteVideo.srcObject.getTracks()[0].enabled = true;
+    localVideo.srcObject.getTracks()[0].enabled = true;
   
-    console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0] )
-    console.log('local tracks: ', localVideo.srcObject.getTracks()[0] )
+    // console.log('remote tracks: ', remoteVideo.srcObject.getTracks()[0]);
+    // console.log('local tracks: ', localVideo.srcObject.getTracks()[0]);
 
-    document.querySelector('#muteVideoButton').textContent = 'Mute'
+    document.querySelector('#muteVideoButton').textContent = 'Mute';
 
-    mute = false
-
+    mute = false;
   }
-
-
 }
 
 
